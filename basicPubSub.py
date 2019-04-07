@@ -15,6 +15,7 @@
  */
  '''
 
+from grove_temperature_humidity_sensor import DHT
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 import logging
 import time
@@ -111,11 +112,21 @@ time.sleep(2)
 
 # Publish to the same topic in a loop forever
 loopCount = 0
+from grove.helper import SlotHelper
+sh = SlotHelper(SlotHelper.GPIO)
+#  pin = sh.argv2pin("  [dht_type]")
+pin = 12
+typ = '22'
+
+sensor = DHT(typ, pin)
+
 while True:
+
     if args.mode == 'both' or args.mode == 'publish':
         message = {}
-        message['message'] = args.message
-        message['sequence'] = loopCount
+        humi, temp = sensor.read()
+        message['humi'] = humi
+        message['temp'] = temp
         messageJson = json.dumps(message)
         myAWSIoTMQTTClient.publish(topic, messageJson, 1)
         if args.mode == 'publish':
