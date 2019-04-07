@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Keys
+raspberry-pi-0.*
+
+# Certificate
+root-CA.crt
